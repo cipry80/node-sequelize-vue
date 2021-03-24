@@ -1,4 +1,4 @@
-const uploadFile = require("../config/multer");
+const { extractObject } = require("../utilities");
 const db = require("../models");
 
 const upload = async (req, res) => {
@@ -40,15 +40,18 @@ const getFiles = async (req, res) => {
 
 const getFile = async (req, res) => {
   try {
-    await db.File.findAll({
+    const file = await db.File.findAll({
       where: { fileId: req.params.id },
     });
-    // const responseObj = {
-    //   succes: true,
-    //   ...extractObject(file[0], ["fileId", "name"]),
-    // };
-    res.status(200).json(success);
+
+    const responseObj = {
+      succes: true,
+      ...extractObject(file[0], ["fileId", "name"]),
+    };
+
+    res.status(200).json(responseObj);
   } catch (error) {
+    console.log(error);
     res.status(400).json({ succes: false, error });
   }
 };
