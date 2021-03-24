@@ -1,0 +1,41 @@
+{
+  "name": "node-sequelize-starter",
+  "version": "1.0.0",
+  "description": "node starter",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon --watch app app/index.js",
+    "lint": "eslint app",
+    "ci": "npm run lint"
+  },
+  "keywords": [
+    "node",
+    "starter",
+    "express",
+    "sequelize"
+  ],
+  "author": "",
+  "license": "ISC",
+  "homepage": "",
+  "dependencies": {
+    "express": "^4.17.1",
+    "express-jwt": "^6.0.0",
+    "fs": "^0.0.1-security",
+    "jsonwebtoken": "^8.5.1",
+    "mysql2": "^2.2.5",
+    "path": "^0.12.7",
+    "sequelize": "^6.6.1",
+    "sequelize-cli": "^6.2.0",
+    "winston": "^3.3.3"
+  },
+  "devDependencies": {
+    "babel-eslint": "^10.1.0",
+    "bcrypt": "^5.0.1",
+    "eslint": "^7.22.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-config-fortech": "^2.0.2",
+    "eslint-plugin-import": "^2.22.1",
+    "uid": "^2.0.0"
+  }
+}
