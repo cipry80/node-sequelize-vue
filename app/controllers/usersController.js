@@ -8,7 +8,7 @@ const { extractObject } = require("../utilities");
 
 const db = require("../models");
 
-exports.getUsers = async (req, res) => {
+const getUsers = async (req, res) => {
   // let { user } = req;
   // if ( user ) {
   //     res.preconditionFailed( "existing_user" );
@@ -33,7 +33,7 @@ exports.getUsers = async (req, res) => {
   // } );
 };
 
-exports.getUser = async (req, res) => {
+const getUser = async (req, res) => {
   try {
     const user = await db.User.findAll({
       where: { userId: req.params.id },
@@ -48,7 +48,7 @@ exports.getUser = async (req, res) => {
   }
 };
 
-exports.register = async (req, res) => {
+const register = async (req, res) => {
   try {
     const { username, password, age, sex, email } = req.body;
     const newUser = await db.User.create({
@@ -91,7 +91,7 @@ exports.register = async (req, res) => {
 //     } );
 // };
 
-exports.edit = async (req, res) => {
+const edit = async (req, res) => {
   try {
     const email = await req.body.email;
     const id = await req.params.id;
@@ -103,7 +103,7 @@ exports.edit = async (req, res) => {
   }
 };
 
-exports.delete = async (req, res) => {
+const deleteUser = async (req, res) => {
   try {
     await db.User.destroy({ where: { userId: req.params.id } });
     res.status(204).json({ succes: "The user was deleted" });
@@ -111,3 +111,5 @@ exports.delete = async (req, res) => {
     res.status(400).json({ succes: false, error });
   }
 };
+
+module.exports = { getUsers, getUser, register, edit, deleteUser };
