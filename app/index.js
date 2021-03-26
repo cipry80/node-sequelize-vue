@@ -19,8 +19,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 // app.use( customResponses );
 
-// require( "./config/routes" )( app );
-
 app.get("/", homeRoutes);
 
 app.use("/api/v1/users", userRoutes);
@@ -43,11 +41,6 @@ app.use((err, req, res, next) => {
     error: "server_error",
   });
 });
-
-// force: true will drop the table if it already exists
-// db.sequelize.sync({ force: true }).then(() => {
-//   console.log("Drop and Resync with { force: true }");
-// });
 
 app.listen(port, () => {
   console.log(`App listening on http://localhost:${port}`);
