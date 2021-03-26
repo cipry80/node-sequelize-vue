@@ -1,10 +1,9 @@
-// const mongoose = require( "mongoose" );
 const { extractObject } = require("../utilities");
-// const jwt = require( "jsonwebtoken" );
-// const bcrypt = require( "bcrypt" );
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 
-// const User = mongoose.model( "User" );
-// const SECRET = "superSuperSecret";
+const config = require("../config");
+const SECRET = config.SUPER_SECRET;
 
 const db = require("../models");
 
@@ -42,9 +41,12 @@ const getUser = async (req, res) => {
 const register = async (req, res) => {
   try {
     const { username, password, age, sex, email } = req.body;
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(password, salt);
+
     const newUser = await db.User.create({
       username,
-      password,
+      password: hashedPassword,
       age,
       sex,
       email,
@@ -55,32 +57,45 @@ const register = async (req, res) => {
   }
 };
 
-// exports.login = ( req, res ) => {
-//     const { user } = req;
-//     if ( !req.body.password ) {
-//         return res.status( 400 ).send( "password required" );
-//     }
+const login = async (req, res) => {
+  if (!req.body.password) {
+    return res.status(400).send("password required");
+  }
 
-//     const password = bcrypt.compareSync( req.body.password, user.password );
-//     if ( user ) {
-//         if ( user.password !== password ) {
-//             return res.json( {
-//                 success: false,
-//                 message: "Authentication failed. Wrong password.",
-//             } );
-//         }
+  const user = await db.User.findAll({
+    where: { username: req.body.username },
+  });
 
-//         const token = jwt.sign( user.toObject(), SECRET, { expiresIn: 1440 } );
-//         return res.json( {
-//             success: true,
-//             token,
-//         } );
-//     }
-//     return res.json( {
-//         success: false,
-//         message: "Authentication failed. User not found.",
-//     } );
-// };
+  const dbPassword = user[0].password;
+  // const userId = user[0].userId;
+  // const username = user[0].username;
+  const { userId, username, password, email } = user[0];
+
+  try {
+    const matchPassword = await bcrypt.compareSync(req.body.password, password);
+
+    if (!matchPassword) {
+      return res.json({
+        success: false,
+        message: "Authentication failed. Wrong password.",
+      });
+    }
+
+    const token = jwt.sign({ userId, username, email }, SECRET, {
+      expiresIn: 86400, // 24 hours
+    });
+
+    return res.json({
+      success: true,
+      token,
+    });
+  } catch (error) {
+    return res.json({
+      success: false,
+      message: "Authentication failed. User not found.",
+    });
+  }
+};
 
 const edit = async (req, res) => {
   try {
@@ -103,4 +118,4 @@ const deleteUser = async (req, res) => {
   }
 };
 
-module.exports = { getUsers, getUser, register, edit, deleteUser };
+module.exports = { getUsers, getUser, register, login, edit, deleteUser };

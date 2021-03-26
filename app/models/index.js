@@ -53,8 +53,8 @@ db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
 // force: true will drop the table if it already exists
-db.sequelize.sync({ force: true }).then(() => {
-  console.log("Drop and Resync with { force: true }");
-});
+// db.sequelize.sync({ force: true }).then(() => {
+//   console.log("Drop and Resync with { force: true }");
+// });
 
 module.exports = db;

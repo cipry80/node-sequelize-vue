@@ -1,4 +1,5 @@
 const express = require("express");
+const helmet = require("helmet");
 const logger = require("./utilities/logger");
 
 const config = require("./config");
@@ -17,12 +18,24 @@ app.set("env", ENV);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
 // app.use( customResponses );
 
 app.get("/", homeRoutes);
 
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/files", filesRoutes);
+
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, X-Access-Token"
+  );
+  next();
+});
+
+app.use(helmet());
 
 app.use((req, res) => {
   // res.notFound();
