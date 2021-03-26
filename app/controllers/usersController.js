@@ -18,19 +18,10 @@ const getUsers = async (req, res) => {
   // user.setPass( req.body.password );
   try {
     const users = await db.User.findAll();
-    const responseObj = users;
-
-    // console.log(responseObj, "responseObj", ...users);
     res.status(200).json({ succes: true, ...users });
   } catch (error) {
     res.status(404).json({ succes: false, error: error.message });
   }
-
-  //     if ( err ) {
-  //         return res.validationError( err );
-  //     }
-
-  // } );
 };
 
 const getUser = async (req, res) => {
