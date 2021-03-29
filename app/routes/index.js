@@ -8,7 +8,7 @@ router.get("/", (req, res) => {
 
 router.get(
   "/protected",
-  passport.authenticate("jwt", { session: false }),
+  passport.authenticate("custom-strategy", { session: false }),
   (req, res) => {
     res.send("Hello from protectedroutes");
   }
