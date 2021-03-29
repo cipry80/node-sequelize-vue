@@ -28,6 +28,11 @@ const getUser = async (req, res) => {
     const user = await db.User.findAll({
       where: { userId: req.params.id },
     });
+
+    if (user.length === 0) {
+      return res.status(401).json({ messages: "No such user found" });
+    }
+
     const responseObj = {
       succes: true,
       ...extractObject(user[0], ["userId", "username"]),
@@ -66,9 +71,10 @@ const login = async (req, res) => {
     where: { username: req.body.username },
   });
 
-  const dbPassword = user[0].password;
-  // const userId = user[0].userId;
-  // const username = user[0].username;
+  if (user.length === 0) {
+    return res.status(401).json({ messages: "No such user found" });
+  }
+
   const { userId, username, password, email } = user[0];
 
   try {
@@ -84,6 +90,8 @@ const login = async (req, res) => {
     const token = jwt.sign({ userId, username, email }, SECRET, {
       expiresIn: 86400, // 24 hours
     });
+
+    res.cookie("token", token, { httpOnly: true });
 
     return res.json({
       success: true,
@@ -102,6 +110,14 @@ const edit = async (req, res) => {
     const email = await req.body.email;
     const id = await req.params.id;
 
+    const user = await db.User.findAll({
+      where: { userId: req.params.id },
+    });
+
+    if (user.length === 0) {
+      return res.status(401).json({ messages: "No such user found" });
+    }
+
     await db.User.update({ email }, { where: { userId: id } });
     res.status(200).json({ message: "User updated with succes" });
   } catch (error) {
@@ -111,8 +127,15 @@ const edit = async (req, res) => {
 
 const deleteUser = async (req, res) => {
   try {
+    const user = await db.User.findAll({
+      where: { userId: req.params.id },
+    });
+
+    if (user.length === 0) {
+      return res.status(401).json({ messages: "No such user found" });
+    }
     await db.User.destroy({ where: { userId: req.params.id } });
-    res.status(204).json({ succes: "The user was deleted" });
+    res.status(200).json({ succes: "The user was deleted" });
   } catch (error) {
     res.status(400).json({ succes: false, error });
   }

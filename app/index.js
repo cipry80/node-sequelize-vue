@@ -1,9 +1,9 @@
 const express = require("express");
 const helmet = require("helmet");
-const logger = require("./utilities/logger");
+const cookieParser = require("cookie-parser");
 
+const logger = require("./utilities/logger");
 const config = require("./config");
-const db = require("./models");
 
 const homeRoutes = require("./routes/index");
 const userRoutes = require("./routes/users");
@@ -13,12 +13,13 @@ const filesRoutes = require("./routes/files");
 const app = express();
 const port = process.env.PORT || config.port;
 const ENV = config.env;
+require("./middlewares/passport");
 
 app.set("env", ENV);
 
-app.use(express.json());
+app.use(express.json({ limit: "10kb" }));
 app.use(express.urlencoded({ extended: false }));
-
+app.use(cookieParser());
 // app.use( customResponses );
 
 app.get("/", homeRoutes);

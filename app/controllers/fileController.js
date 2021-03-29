@@ -4,7 +4,7 @@ const db = require("../models");
 const upload = async (req, res) => {
   try {
     if (req.file === undefined) {
-      return res.status(400).send({ message: "Please upload a file!" });
+      return res.status(400).json({ message: "Please upload a file!" });
     }
 
     await db.File.create({
@@ -13,15 +13,13 @@ const upload = async (req, res) => {
       data: req.file.buffer,
     });
 
-    res.status(200).send({
+    res.status(200).json({
       message: "Uploaded the file successfully: " + req.file.originalname,
     });
   } catch (err) {
-    if (err.code === "LIMIT_FILE_SIZE") {
-      return res.status(500).send({
-        message: "File size cannot be larger than 2MB!",
-      });
-    }
+    res.status(500).send({
+      message: "File size cannot be larger than 2MB!",
+    });
   }
 };
 
@@ -43,6 +41,10 @@ const getFile = async (req, res) => {
     const file = await db.File.findAll({
       where: { fileId: req.params.id },
     });
+
+    if (file.length === 0) {
+      return res.status(401).json({ messages: "No such file found" });
+    }
 
     const responseObj = {
       succes: true,
