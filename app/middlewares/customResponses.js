@@ -1,76 +1,80 @@
-// const customResponses = {
-//     success( payload ) {
-//         return this.status( 200 ).json( {
-//             success: true,
-//             payload,
-//         } );
-//     },
+const extractValidationType = (errors) => {
+  const fields = Object.keys(errors);
+  return fields
+    .map((key) => errors[key])
+    .map((validation) => ({
+      errorOnField: validation.path,
+      message: validation.message,
+    }));
+};
 
-//     unauthorized( ) {
-//         return this.status( 401 ).json( {
-//             success: false,
-//             error: "unauthorized",
-//         } );
-//     },
+const customResponses = {
+  success(payload) {
+    return this.status(200).json({
+      success: true,
+      payload,
+    });
+  },
 
-//     preconditionFailed( customError ) {
-//         return this.status( 412 ).json( {
-//             success: false,
-//             error: customError || "precondition_failed",
-//         } );
-//     },
+  unauthorized() {
+    return this.status(401).json({
+      success: false,
+      error: "unauthorized",
+    });
+  },
 
-//     validationError( error ) {
-//         if ( !error || !error.errors ) {
-//             return this.serverError( );
-//         }
+  preconditionFailed(customError) {
+    return this.status(412).json({
+      success: false,
+      error: customError || "precondition_failed",
+    });
+  },
 
-//         let errorResponse = { };
-//         const typeFields = extractValidationType( error.errors );
-//         if ( typeFields.length > 0 ) {
-//             errorResponse = typeFields;
-//         }
+  validationError(error) {
+    if (!error || !error.errors) {
+      return this.serverError();
+    }
 
-//         return this.unprocessableEntity( errorResponse );
-//     },
+    let errorResponse = {};
+    const typeFields = extractValidationType(error.errors);
+    if (typeFields.length > 0) {
+      errorResponse = typeFields;
+    }
 
-//     blocked( ) {
-//         return this.status( 410 ).json( {
-//             success: false,
-//             error: "version_blocked",
-//         } );
-//     },
+    return this.unprocessableEntity(errorResponse);
+  },
 
-//     unprocessableEntity( customError ) {
-//         return this.status( 422 ).json( {
-//             success: false,
-//             error: "unprocessable_entity",
-//             payload: customError,
-//         } );
-//     },
+  blocked() {
+    return this.status(410).json({
+      success: false,
+      error: "version_blocked",
+    });
+  },
 
-//     notFound( ) {
-//         return this.status( 404 ).json( {
-//             success: false,
-//             error: "not_found",
-//         } );
-//     },
+  unprocessableEntity(customError) {
+    return this.status(422).json({
+      success: false,
+      error: "unprocessable_entity",
+      payload: customError,
+    });
+  },
 
-//     serverError( ) {
-//         return this.status( 503 ).json( {
-//             success: false,
-//             error: "server_error",
-//         } );
-//     },
-// };
+  notFound() {
+    return this.status(404).json({
+      success: false,
+      error: "not_found",
+    });
+  },
 
-// module.exports = ( req, res, next ) => {
-//     Object.assign( res, customResponses );
-//     next( );
-// };
+  serverError() {
+    return this.status(503).json({
+      success: false,
+      error: "server_error",
+    });
+  },
+};
 
-// function extractValidationType( errors ) {
-//     const fields = Object.keys( errors );
-//     return fields.map( key => errors[ key ] )
-//         .map( validation => ( { errorOnField: validation.path, message: validation.message } ) );
-// }
+module.exports = (req, res, next) => {
+  Object.assign(res, customResponses);
+  next();
+};

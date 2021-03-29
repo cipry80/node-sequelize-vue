@@ -16,7 +16,7 @@ const upload = async (req, res) => {
     res.status(200).json({
       message: "Uploaded the file successfully: " + req.file.originalname,
     });
-  } catch (err) {
+  } catch (error) {
     res.status(500).send({
       message: "File size cannot be larger than 2MB!",
     });

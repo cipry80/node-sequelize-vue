@@ -1,4 +1,4 @@
-const { extractObject } = require("../utilities");
+const { extractObject, generateToken } = require("../utilities");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
@@ -8,13 +8,6 @@ const SECRET = config.SUPER_SECRET;
 const db = require("../models");
 
 const getUsers = async (req, res) => {
-  // let { user } = req;
-  // if ( user ) {
-  //     res.preconditionFailed( "existing_user" );
-  //     return;
-  // }
-  // user = new User( req.body );
-  // user.setPass( req.body.password );
   try {
     const users = await db.User.findAll();
     res.status(200).json({ succes: true, ...users });
@@ -46,17 +39,32 @@ const getUser = async (req, res) => {
 const register = async (req, res) => {
   try {
     const { username, password, age, sex, email } = req.body;
+
+    const user = await db.User.findAll({
+      where: { username: req.body.username },
+    });
+
+    console.log(user, "user");
+
+    if (user.length > 0) {
+      res.preconditionFailed("existing_user");
+      return;
+    }
+
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    const newUser = await db.User.create({
+    await db.User.create({
       username,
       password: hashedPassword,
       age,
       sex,
       email,
     });
-    res.status(201).json({ succes: true, ...newUser });
+
+    return res.status(201).json({
+      success: true,
+    });
   } catch (error) {
     res.status(400).json({ succes: false, error: error.message });
   }
@@ -78,7 +86,7 @@ const login = async (req, res) => {
   const { userId, username, password, email } = user[0];
 
   try {
-    const matchPassword = await bcrypt.compareSync(req.body.password, password);
+    const matchPassword = bcrypt.compareSync(req.body.password, password);
 
     if (!matchPassword) {
       return res.json({
@@ -87,18 +95,23 @@ const login = async (req, res) => {
       });
     }
 
-    const token = jwt.sign({ userId, username, email }, SECRET, {
-      expiresIn: 86400, // 24 hours
-    });
+    const expiresIn = "1d";
+    const payload = {
+      id: userId,
+      username,
+      email,
+      iat: Date.now(),
+    };
 
-    res.cookie("token", token, { httpOnly: true });
+    const token = await generateToken(payload, SECRET, jwt, expiresIn);
 
-    return res.json({
+    res.status(200).json({
       success: true,
-      token,
+      token: "Bearer " + token,
+      expiresIn,
     });
   } catch (error) {
-    return res.json({
+    res.json({
       success: false,
       message: "Authentication failed. User not found.",
     });
