@@ -81,7 +81,7 @@ const login = async (req, res) => {
   });
 
   if (user.length === 0) {
-    return res.status(401).json({ messages: "No such user found" });
+    return res.status(404).json({ messages: "No such user found" });
   }
 
   const { userId, username, password, email } = user[0];
@@ -90,7 +90,7 @@ const login = async (req, res) => {
     const matchPassword = bcrypt.compareSync(req.body.password, password);
 
     if (!matchPassword) {
-      return res.json({
+      return res.status(401).json({
         success: false,
         message: "Authentication failed. Wrong password.",
       });
@@ -108,13 +108,13 @@ const login = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      token: "Bearer " + token,
+      token,
       expiresIn,
     });
   } catch (error) {
-    res.json({
+    res.status(401).json({
       success: false,
-      message: "Authentication failed. User not found.",
+      message: "Authentication failed",
     });
   }
 };

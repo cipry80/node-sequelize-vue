@@ -37,6 +37,8 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "Login",
   props: {
@@ -48,19 +50,27 @@ export default {
         username: "",
         password: "",
       },
+      errors: [],
       show: true,
     };
   },
   methods: {
-    // login() {
-    //   if (this.input.password === "pass" && this.input.username === "user") {
-    //   } else {
-    //     console.log("username or password inccorect");
-    //   }
-    // },
-    onSubmit(event) {
-      event.preventDefault();
-      alert(JSON.stringify(this.form));
+    async onSubmit(e) {
+      e.preventDefault();
+
+      try {
+        const response = await axios.post(
+          "http://localhost:3000/api/v1/users/login",
+          this.form
+        );
+        if (response) {
+          this.$router.push("admin");
+        } else {
+          this.errors.push(response.message);
+        }
+      } catch (error) {
+        this.errors.push(error);
+      }
     },
   },
 };
