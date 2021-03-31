@@ -1,7 +1,7 @@
 <template>
   <div class="register">
     <h1>Register Page</h1>
-    <b-form @submit="onSubmit" v-if="show">
+    <b-form @submit="onSubmit">
       <b-form-group id="input-group-1" label="Username:" label-for="input-1">
         <b-form-input
           id="input-1"
@@ -83,7 +83,6 @@ export default {
   methods: {
     async onSubmit(e) {
       e.preventDefault();
-      console.log(this.form);
       try {
         await axios.post(
           `http://localhost:3000/api/v1/users/register`,
