@@ -1,6 +1,6 @@
 <template>
   <div class="login">
-    <h1>{{ title }}</h1>
+    <h1>Login</h1>
     <b-form @submit="onSubmit" v-if="show">
       <b-form-group
         id="input-group-1"
