@@ -25,12 +25,9 @@ const upload = async (req, res) => {
 
 const getFiles = async (req, res) => {
   try {
-    const files = await db.File.findAll();
-    const responseObj = {
-      succes: true,
-      ...files,
-    };
-    res.status(200).json(responseObj);
+    const files = await db.File.findAll({ raw: true });
+
+    res.status(200).json({ succes: true, files });
   } catch (error) {
     res.status(400).json({ succes: false, error });
   }

@@ -9,8 +9,8 @@ const db = require("../models");
 
 const getUsers = async (req, res) => {
   try {
-    const users = await db.User.findAll();
-    res.status(200).json({ succes: true, ...users });
+    const users = await db.User.findAll({ raw: true });
+    res.status(200).json({ succes: true, users });
   } catch (error) {
     res.status(404).json({ succes: false, error: error.message });
   }
@@ -44,8 +44,6 @@ const register = async (req, res) => {
       where: { username },
     });
 
-    console.log(user, "user");
-
     if (user.length > 0) {
       res.preconditionFailed("existing_user");
       return;
@@ -66,7 +64,6 @@ const register = async (req, res) => {
       success: true,
     });
   } catch (error) {
-    console.log(error);
     res.status(400).json({ succes: false, error: error.message });
   }
 };
