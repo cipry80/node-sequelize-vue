@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const router = express.Router();
 
 const {
@@ -10,11 +11,11 @@ const {
   deleteUser,
 } = require("../controllers/usersController");
 
-router.get("/", getUsers);
-router.post("/register", register);
-router.post("/login", login);
-router.put("/:id", edit);
-router.get("/:id", getUser);
-router.delete("/:id", deleteUser);
+router.get("/", cors(), getUsers);
+router.post("/register", cors(), register);
+router.post("/login", cors(), login);
+router.put("/:id", cors(), edit);
+router.get("/:id", cors(), getUser);
+router.delete("/:id", cors(), deleteUser);
 
 module.exports = router;

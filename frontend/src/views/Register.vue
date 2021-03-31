@@ -1,16 +1,12 @@
 <template>
   <div class="register">
-    <h1>{{ title }}</h1>
+    <h1>Register Page</h1>
     <b-form @submit="onSubmit" v-if="show">
-      <b-form-group
-        id="input-group-1"
-        label="Username:"
-        label-for="input-1"
-        description="We'll never share your email with anyone else."
-      >
+      <b-form-group id="input-group-1" label="Username:" label-for="input-1">
         <b-form-input
           id="input-1"
           v-model="form.username"
+          name="username"
           type="text"
           placeholder="Enter username"
           required
@@ -25,6 +21,7 @@
         <b-form-input
           id="input-2"
           v-model="form.password"
+          name="password"
           type="password"
           placeholder="Enter password"
           required
@@ -34,6 +31,7 @@
         <b-form-input
           id="input-3"
           v-model="form.email"
+          name="email"
           type="email"
           placeholder="Enter email"
           required
@@ -43,6 +41,7 @@
         <b-form-input
           id="input-4"
           v-model="form.age"
+          name="age"
           type="number"
           placeholder="Enter your age"
           required
@@ -52,6 +51,7 @@
         <b-form-input
           id="input-5"
           v-model="form.gender"
+          name="gender"
           type="text"
           placeholder="Enter your gender"
           required
@@ -64,11 +64,10 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "Register",
-  props: {
-    title: String,
-  },
   data() {
     return {
       form: {
@@ -78,13 +77,22 @@ export default {
         age: "",
         gender: "",
       },
-      show: true,
+      errors: [],
     };
   },
   methods: {
-    onSubmit(event) {
-      event.preventDefault();
-      console.log(JSON.stringify(this.form));
+    async onSubmit(e) {
+      e.preventDefault();
+      console.log(this.form);
+      try {
+        await axios.post(
+          `http://localhost:3000/api/v1/users/register`,
+          this.form
+        );
+        this.$router.push("/login");
+      } catch (e) {
+        this.errors.push(e);
+      }
     },
   },
 };

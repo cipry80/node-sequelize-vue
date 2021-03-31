@@ -1,5 +1,5 @@
 <template>
-  <b-container>
+  <b-container class="nav-container">
     <b-nav>
       <b-nav-item active to="/">Home</b-nav-item>
       <b-nav-item to="/admin">Admin</b-nav-item>
@@ -16,3 +16,10 @@ export default {
   name: "Header",
 };
 </script>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped lang="scss">
+.nav-container ul {
+  justify-content: center;
+}
+</style>

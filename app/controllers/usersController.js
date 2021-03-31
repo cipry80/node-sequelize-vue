@@ -41,7 +41,7 @@ const register = async (req, res) => {
     const { username, password, age, sex, email } = req.body;
 
     const user = await db.User.findAll({
-      where: { username: req.body.username },
+      where: { username },
     });
 
     console.log(user, "user");
@@ -66,6 +66,7 @@ const register = async (req, res) => {
       success: true,
     });
   } catch (error) {
+    console.log(error);
     res.status(400).json({ succes: false, error: error.message });
   }
 };

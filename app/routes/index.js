@@ -10,7 +10,7 @@ router.get(
   "/protected",
   passport.authenticate("custom-strategy", { session: false }),
   (req, res) => {
-    res.send("Hello from protectedroutes");
+    res.send("Hello from protected routes");
   }
 );
 
