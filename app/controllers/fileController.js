@@ -17,10 +17,7 @@ const upload = async (req, res) => {
       message: "Uploaded the file successfully: " + req.file.originalname,
     });
   } catch (error) {
-    console.log(error);
-    res.status(500).send({
-      message: "File size cannot be larger than 2MB!",
-    });
+    res.validationError();
   }
 };
 

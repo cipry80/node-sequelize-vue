@@ -50,10 +50,14 @@ app.use((err, req, res, next) => {
 // Don"t remove next !!!!
 app.use((err, req, res, next) => {
   // eslint-disable-line no-unused-vars
-  res.status(503).json({
-    success: false,
-    error: "server_error",
-  });
+  if (err.code === "LIMIT_FILE_TYPES" || err.code === "LIMIT_FILE_SIZE") {
+    return res.status(422).json("File  not allowed");
+  } else {
+    res.status(503).json({
+      success: false,
+      error: "server_error",
+    });
+  }
 });
 
 app.listen(port, () => {

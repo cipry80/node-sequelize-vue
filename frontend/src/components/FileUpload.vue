@@ -56,7 +56,7 @@ export default {
         this.error = false;
         this.selectedFile = null;
       } catch (error) {
-        this.message = "Something went wrong, please upload a new file";
+        this.message = error.response.data;
         this.error = true;
         console.log(error);
       }
