@@ -4,14 +4,12 @@
       <th>Id</th>
       <th>Name</th>
       <th>Type</th>
-      <th>Edit</th>
       <th>Delete</th>
     </tr>
     <tr v-for="file in files" :key="file.id">
       <td>{{ file.fileId }}</td>
       <td>{{ file.name }}</td>
       <td>{{ file.type }}</td>
-      <td><b-button>Edit</b-button></td>
       <td><b-button>Delete</b-button></td>
     </tr>
   </table>

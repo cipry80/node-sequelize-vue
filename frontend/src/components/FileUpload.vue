@@ -32,13 +32,11 @@ export default {
       this.selectedFile = e.target.files[0];
     },
     async onUpload() {
-      const fd = new FormData();
-      fd.append("file", this.selectedFile, this.selectedFile.name);
+      try {
+        const fd = new FormData();
+        fd.append("file", this.selectedFile, this.selectedFile.name);
 
-      const res = await axios.post(
-        "http://localhost:3000/api/v1/files/upload",
-        fd,
-        {
+        await axios.post("http://localhost:3000/api/v1/files/upload", fd, {
           onUploadProgress: (uploadEvent) => {
             console.log(
               `Upload Progress: ${Math.round(
@@ -46,8 +44,10 @@ export default {
               )} % `
             );
           },
-        }
-      );
+        });
+      } catch (error) {
+        console.log(error);
+      }
     },
   },
 };
