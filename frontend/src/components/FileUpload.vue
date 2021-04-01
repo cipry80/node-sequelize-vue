@@ -1,6 +1,9 @@
 <template>
   <b-container class="fileUpload-container">
     <h3>{{ title }}</h3>
+    <div v-if="message" :class="`message ${error ? 'danger' : 'success'}`">
+      <div class="message-body">{{ message }}</div>
+    </div>
 
     <input
       style="display: none"
@@ -25,11 +28,15 @@ export default {
   data() {
     return {
       selectedFile: null,
+      message: "",
+      error: false,
     };
   },
   methods: {
     onFileSelected(e) {
       this.selectedFile = e.target.files[0];
+      this.error = false;
+      this.message = null;
     },
     async onUpload() {
       try {
@@ -45,7 +52,12 @@ export default {
             );
           },
         });
+        this.message = "File uploaded with success";
+        this.error = false;
+        this.selectedFile = null;
       } catch (error) {
+        this.message = "Something went wrong, please upload a new file";
+        this.error = true;
         console.log(error);
       }
     },
