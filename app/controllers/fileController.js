@@ -13,8 +13,11 @@ const upload = async (req, res) => {
       data: req.file.buffer,
     });
 
+    const files = await db.File.findAll({ raw: true });
+
     res.status(200).json({
       message: "Uploaded the file successfully: " + req.file.originalname,
+      files,
     });
   } catch (error) {
     res.validationError();
@@ -24,7 +27,6 @@ const upload = async (req, res) => {
 const getFiles = async (req, res) => {
   try {
     const files = await db.File.findAll({ raw: true });
-
     res.status(200).json({ succes: true, files });
   } catch (error) {
     res.status(400).json({ succes: false, error });
@@ -52,4 +54,20 @@ const getFile = async (req, res) => {
   }
 };
 
-module.exports = { upload, getFiles, getFile };
+const deleteFile = async (req, res) => {
+  try {
+    const file = await db.File.findAll({
+      where: { fileId: req.params.id },
+    });
+
+    if (file.length === 0) {
+      return res.status(401).json({ messages: "No such file found" });
+    }
+    await db.File.destroy({ where: { fileId: req.params.id } });
+    res.status(200).json({ succes: "The File was deleted" });
+  } catch (error) {
+    res.status(400).json({ succes: false, error });
+  }
+};
+
+module.exports = { upload, getFiles, getFile, deleteFile };

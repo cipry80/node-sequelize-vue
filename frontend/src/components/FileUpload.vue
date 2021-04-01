@@ -2,7 +2,8 @@
   <b-container class="fileUpload-container">
     <h3>{{ title }}</h3>
     <div v-if="message" :class="`message ${error ? 'danger' : 'success'}`">
-      <div class="message-body">{{ message }}</div>
+      <div class="message-body">{{ message || deleteMessage }}</div>
+      <div class="message-body">{{ deleteMessage }}</div>
     </div>
 
     <input
@@ -19,18 +20,27 @@
 </template>
 
 <script>
-// @ is an alias to /src
 import axios from "axios";
+import { bus } from "../main";
 
 export default {
   name: "FileUpload",
-  props: { title: String },
+  props: { title: String, deleteMessage: String },
   data() {
     return {
       selectedFile: null,
       message: "",
       error: false,
     };
+  },
+  created() {
+    bus.$on("uploadNewFile", (data) => {
+      this.files = data;
+    });
+
+    bus.$on("fileDeleted", (data) => {
+      this.message = data;
+    });
   },
   methods: {
     onFileSelected(e) {
@@ -43,22 +53,26 @@ export default {
         const fd = new FormData();
         fd.append("file", this.selectedFile, this.selectedFile.name);
 
-        await axios.post("http://localhost:3000/api/v1/files/upload", fd, {
-          onUploadProgress: (uploadEvent) => {
-            console.log(
-              `Upload Progress: ${Math.round(
-                (uploadEvent.loaded / uploadEvent.total) * 100
-              )} % `
-            );
-          },
-        });
+        const res = await axios.post(
+          "http://localhost:3000/api/v1/files/upload",
+          fd,
+          {
+            onUploadProgress: (uploadEvent) => {
+              console.log(
+                `Upload Progress: ${Math.round(
+                  (uploadEvent.loaded / uploadEvent.total) * 100
+                )} % `
+              );
+            },
+          }
+        );
         this.message = "File uploaded with success";
         this.error = false;
         this.selectedFile = null;
+        bus.$emit("uploadNewFile", res.data.files);
       } catch (error) {
         this.message = error.response.data;
         this.error = true;
-        console.log(error);
       }
     },
   },
