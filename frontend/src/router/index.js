@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
 import Register from "../views/Register.vue";
 import Login from "../views/Login.vue";
+import Logout from "../views/Logout.vue";
 
 Vue.use(VueRouter);
 
@@ -15,11 +16,16 @@ const routes = [
   {
     path: "/admin",
     name: "Admin",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/Admin.vue"),
+    beforeEnter(to, form, next) {
+      const username = localStorage.getItem("user");
+      if (username) {
+        next();
+      } else {
+        next("/login");
+      }
+    },
   },
   {
     path: "/login",
@@ -30,6 +36,12 @@ const routes = [
     path: "/register",
     name: "Register",
     component: Register,
+  },
+
+  {
+    path: "/logout",
+    name: "logout",
+    component: Logout,
   },
 ];
 

@@ -38,9 +38,7 @@ export default {
       error: false,
     };
   },
-  created() {
-    // bus.$on("uploadNewFile");
-
+  mounted() {
     bus.$on("fileDeleted", (data) => {
       this.message = data;
     });

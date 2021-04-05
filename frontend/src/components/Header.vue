@@ -2,18 +2,31 @@
   <b-container class="nav-container">
     <b-nav>
       <b-nav-item active to="/">Home</b-nav-item>
-      <b-nav-item to="/admin">Admin</b-nav-item>
-      <b-nav-item to="/login">Login</b-nav-item>
-      <b-nav-item to="/register">Register</b-nav-item>
+      <b-nav-item v-if="username" to="/admin">Admin</b-nav-item>
+      <b-nav-item v-if="!username" to="/login">Login</b-nav-item>
+      <b-nav-item v-if="!username" to="/register">Register</b-nav-item>
+      <b-nav-item v-if="username" @click="handleLogout()">Logout</b-nav-item>
     </b-nav>
   </b-container>
 </template>
 
 <script>
-// @ is an alias to /src
+import { bus } from "../main";
 
 export default {
   name: "Header",
+  props: { username: String },
+  mounted() {
+    console.log(this.username, "username");
+  },
+  methods: {
+    handleLogout() {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      bus.$emit("logout");
+      this.$router.push("/login");
+    },
+  },
 };
 </script>
 

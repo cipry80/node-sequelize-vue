@@ -32,12 +32,17 @@
       </b-form-group>
 
       <b-button type="submit" variant="primary">Login</b-button>
+      <div>
+        Not register, go to: <router-link to="/register">Register</router-link>
+      </div>
     </b-form>
   </div>
 </template>
 
 <script>
 import axios from "axios";
+import jwt_decode from "jwt-decode";
+import { bus } from "../main";
 
 export default {
   name: "Login",
@@ -59,19 +64,31 @@ export default {
       e.preventDefault();
 
       try {
-        const response = await axios.post(
+        const { data } = await axios.post(
           "http://localhost:3000/api/v1/users/login",
           this.form
         );
-        if (response) {
-          this.$router.push("admin");
+
+        const token = data?.token;
+        const { username } = jwt_decode(token);
+
+        if (data) {
+          localStorage.setItem("token", data?.token);
+          localStorage.setItem("user", username);
+          bus.$emit("login", username);
+          this.$router.push("/");
         } else {
-          this.errors.push(response.message);
+          localStorage.removeItem("token");
+          localStorage.removeItem("user");
+          this.errors.push(data.message);
         }
       } catch (error) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
         this.errors.push(error);
       }
     },
+    goToRegister() {},
   },
 };
 </script>
