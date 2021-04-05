@@ -23,17 +23,15 @@ export default {
       files: [],
     };
   },
-  created() {
-    bus.$on("uploadNewFile", (data) => {
-      console.log(data, "data");
-      this.files = data;
-    });
-  },
 
   async mounted() {
     const { data } = await axios.get("http://localhost:3000/api/v1/files");
     this.files = data.files;
     this.message = null;
+
+    bus.$on("uploadNewFile", (data) => {
+      this.files = data;
+    });
   },
 };
 </script>

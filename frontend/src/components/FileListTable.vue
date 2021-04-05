@@ -42,11 +42,6 @@ export default {
       }
     },
 
-    // typedArrayToURL(typedArray, mimeType) {
-    //   console.log(typedArray, "typedArray", mimeType);
-    //   return window.URL.createObjectURL(typedArray, { type: mimeType });
-    // },
-
     async downloadFile(fileId) {
       try {
         const res = await axios.get(
@@ -56,11 +51,11 @@ export default {
         const file = await res.data?.file[0];
         const blob = await file?.data?.data;
 
-        var arrayBuffer = new Uint8Array(blob).buffer;
-        let fileURL = window.URL.createObjectURL(new Blob([arrayBuffer]), {
+        const arrayBuffer = new Uint8Array(blob).buffer;
+        const fileURL = window.URL.createObjectURL(new Blob([arrayBuffer]), {
           type: file.type,
         });
-        let fileLink = document.createElement("a");
+        const fileLink = document.createElement("a");
 
         fileLink.href = fileURL;
         fileLink.setAttribute("download", file.name);

@@ -15,7 +15,12 @@
     <b-button @click="$refs.fileInput.click()" class="pick"
       >Choose File</b-button
     >
-    <b-button @click="onUpload">Upload</b-button>
+    <b-button
+      :class="` ${selectedFile ? '' : 'disabled'}`"
+      :disabled="!selectedFile"
+      @click="onUpload"
+      >Upload</b-button
+    >
   </b-container>
 </template>
 
@@ -34,9 +39,7 @@ export default {
     };
   },
   created() {
-    bus.$on("uploadNewFile", (data) => {
-      this.files = data;
-    });
+    // bus.$on("uploadNewFile");
 
     bus.$on("fileDeleted", (data) => {
       this.message = data;
@@ -46,7 +49,7 @@ export default {
     onFileSelected(e) {
       this.selectedFile = e.target.files[0];
       this.error = false;
-      this.message = null;
+      this.message = "";
     },
     async onUpload() {
       try {
