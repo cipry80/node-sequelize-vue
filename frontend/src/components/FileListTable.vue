@@ -1,5 +1,5 @@
 <template>
-  <table class="files-table">
+  <table v-if="files.length" class="files-table">
     <tr>
       <th>Id</th>
       <th>Name</th>
