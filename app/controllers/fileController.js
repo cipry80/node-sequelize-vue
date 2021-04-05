@@ -37,6 +37,7 @@ const getFile = async (req, res) => {
   try {
     const file = await db.File.findAll({
       where: { fileId: req.params.id },
+      raw: true,
     });
 
     if (file.length === 0) {
@@ -45,12 +46,12 @@ const getFile = async (req, res) => {
 
     const responseObj = {
       succes: true,
-      ...extractObject(file[0], ["fileId", "name"]),
+      file,
     };
 
     res.status(200).json(responseObj);
   } catch (error) {
-    res.status(400).json({ succes: false, error });
+    res.status(400).json(error);
   }
 };
 

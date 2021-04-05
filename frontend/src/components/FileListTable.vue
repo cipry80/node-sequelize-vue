@@ -4,12 +4,14 @@
       <th>Id</th>
       <th>Name</th>
       <th>Type</th>
+      <th>Download</th>
       <th>Delete</th>
     </tr>
     <tr v-for="(file, i) in files" :key="file.id">
       <td>{{ file.fileId }}</td>
       <td>{{ file.name }}</td>
       <td>{{ file.type }}</td>
+      <td><b-button @click="downloadFile(file.fileId)">Download</b-button></td>
       <td><b-button @click="deleteFile(file.fileId, i)">Delete</b-button></td>
     </tr>
   </table>
@@ -35,6 +37,37 @@ export default {
         await axios.delete(`http://localhost:3000/api/v1/files/${fileId}`);
         this.files.splice(i, 1);
         bus.$emit("fileDeleted", "File deleted with success");
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
+    // typedArrayToURL(typedArray, mimeType) {
+    //   console.log(typedArray, "typedArray", mimeType);
+    //   return window.URL.createObjectURL(typedArray, { type: mimeType });
+    // },
+
+    async downloadFile(fileId) {
+      try {
+        const res = await axios.get(
+          `http://localhost:3000/api/v1/files/${fileId}`
+        );
+
+        const file = await res.data?.file[0];
+        const blob = await file?.data?.data;
+
+        var arrayBuffer = new Uint8Array(blob).buffer;
+        let fileURL = window.URL.createObjectURL(new Blob([arrayBuffer]), {
+          type: file.type,
+        });
+        let fileLink = document.createElement("a");
+
+        fileLink.href = fileURL;
+        fileLink.setAttribute("download", file.name);
+        document.body.appendChild(fileLink);
+
+        fileLink.click();
+        window.URL.revokeObjectURL(arrayBuffer);
       } catch (error) {
         console.log(error);
       }
