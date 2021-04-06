@@ -11,10 +11,10 @@ const opts = {
   secretOrKey: config.PASSPORT_SECRET,
 };
 
-const strategy = new StrategyJwt(opts, (jwtPayload, done) => {
+const strategy = new StrategyJwt(opts, async (jwtPayload, done) => {
   console.log(jwtPayload);
 
-  db.User.findOne({
+  await db.User.findOne({
     where: { userId: jwtPayload?.id },
   })
     .then((user) => {

@@ -4,8 +4,8 @@
   "description": "node starter",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon --watch app app/index.js",
+    "test": "mocha './app/tests/**/*.js' --recursive --watch",
     "lint": "eslint app",
     "ci": "npm run lint"
   },
@@ -37,10 +37,13 @@
   "devDependencies": {
     "babel-eslint": "^10.1.0",
     "bcrypt": "^5.0.1",
+    "chai": "^4.3.4",
+    "chai-http": "^4.3.0",
     "eslint": "^7.22.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-config-fortech": "^2.0.2",
     "eslint-plugin-import": "^2.22.1",
+    "mocha": "^8.3.2",
     "uid": "^2.0.0"
   }
 }

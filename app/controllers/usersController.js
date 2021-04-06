@@ -10,9 +10,9 @@ const db = require("../models");
 const getUsers = async (req, res) => {
   try {
     const users = await db.User.findAll({ raw: true });
-    res.status(200).json({ succes: true, users });
+    res.status(200).json({ success: true, users });
   } catch (error) {
-    res.status(404).json({ succes: false, error: error.message });
+    res.status(404).json({ success: false, error: error.message });
   }
 };
 
@@ -32,7 +32,7 @@ const getUser = async (req, res) => {
     };
     res.status(200).json(responseObj);
   } catch (error) {
-    res.status(400).json({ succes: false, error });
+    res.status(400).json({ success: false, error });
   }
 };
 
@@ -64,7 +64,7 @@ const register = async (req, res) => {
       success: true,
     });
   } catch (error) {
-    res.status(400).json({ succes: false, error: error.message });
+    res.status(400).json({ success: false, error: error.message });
   }
 };
 
@@ -132,7 +132,7 @@ const edit = async (req, res) => {
     await db.User.update({ email }, { where: { userId: id } });
     res.status(200).json({ message: "User updated with succes" });
   } catch (error) {
-    res.status(400).json({ succes: false, error });
+    res.status(400).json({ success: false, error });
   }
 };
 
@@ -146,9 +146,9 @@ const deleteUser = async (req, res) => {
       return res.status(401).json({ messages: "No such user found" });
     }
     await db.User.destroy({ where: { userId: req.params.id } });
-    res.status(200).json({ succes: "The user was deleted" });
+    res.status(200).json({ success: "The user was deleted" });
   } catch (error) {
-    res.status(400).json({ succes: false, error });
+    res.status(400).json({ success: false, error });
   }
 };
 

@@ -32,9 +32,9 @@ const upload = async (req, res) => {
 const getFiles = async (req, res) => {
   try {
     const files = await db.File.findAll({ raw: true });
-    res.status(200).json({ succes: true, files });
+    res.status(200).json({ success: true, files });
   } catch (error) {
-    res.status(400).json({ succes: false, error });
+    res.status(400).json({ success: false, error });
   }
 };
 
@@ -70,9 +70,9 @@ const deleteFile = async (req, res) => {
       return res.status(401).json({ messages: "No such file found" });
     }
     await db.File.destroy({ where: { fileId: req.params.id } });
-    res.status(200).json({ succes: "The File was deleted" });
+    res.status(200).json({ success: "The File was deleted" });
   } catch (error) {
-    res.status(400).json({ succes: false, error });
+    res.status(400).json({ success: false, error });
   }
 };
 

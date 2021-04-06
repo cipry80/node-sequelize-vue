@@ -63,6 +63,10 @@ app.use((err, req, res, next) => {
   }
 });
 
-app.listen(port, () => {
-  console.log(`App listening on http://localhost:${port}`);
-});
+if (!module.parent) {
+  app.listen(port, () => {
+    console.log(`App listening on http://localhost:${port}`);
+  });
+}
+
+module.exports = app;
