@@ -78,7 +78,6 @@ describe("Users route", () => {
   it("should received error on fail", async () => {
     try {
       const response = await chai.request(app).get("/api/v1/userss");
-      const { users } = await response.body;
 
       expect(response.status).to.equal(404);
       expect(response.body).to.be.a("object");
