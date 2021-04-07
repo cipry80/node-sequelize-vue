@@ -16,9 +16,6 @@ import { bus } from "../main";
 export default {
   name: "Header",
   props: { username: String },
-  mounted() {
-    console.log(this.username, "username");
-  },
   methods: {
     handleLogout() {
       localStorage.removeItem("token");

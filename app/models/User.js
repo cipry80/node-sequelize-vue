@@ -33,12 +33,3 @@ module.exports = (sequelize, DataTypes) => {
 
   return User;
 };
-
-// userSchema.methods.setPass = function( password ) {
-//     const saltRounds = 10;
-//     bcrypt.hash( password, saltRounds, function( err, hash ) {
-//         this.password = hash;
-//     } );
-// };
-
-// module.exports = mongoose.model( "User", userSchema );

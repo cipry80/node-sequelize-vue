@@ -45,8 +45,7 @@ const register = async (req, res) => {
     });
 
     if (user.length > 0) {
-      res.preconditionFailed("existing_user");
-      return;
+      return res.preconditionFailed("existing_user");
     }
 
     const salt = await bcrypt.genSalt();
