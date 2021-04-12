@@ -28,7 +28,7 @@ const getUser = async (req, res) => {
 
     const responseObj = {
       succes: true,
-      ...extractObject(user[0], ["userId", "username"]),
+      ...extractObject(user[0], ["userId", "username", "email"]),
     };
     res.status(200).json(responseObj);
   } catch (error) {
@@ -129,7 +129,7 @@ const edit = async (req, res) => {
     }
 
     await db.User.update({ email }, { where: { userId: id } });
-    res.status(200).json({ message: "User updated with succes" });
+    res.status(200).json({ message: "User updated with succes", user });
   } catch (error) {
     res.status(400).json({ success: false, error });
   }
