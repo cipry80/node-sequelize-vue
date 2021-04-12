@@ -11,6 +11,7 @@ chai.use(chaiHttp);
 //   done();
 // });
 
+const usersUrl = "/api/v1/users";
 describe("Users route", () => {
   beforeEach(async () => {
     await db.sequelize.sync({ force: true });
@@ -30,7 +31,30 @@ describe("Users route", () => {
     });
   });
   afterEach(async () => {
-    //await db.User.drop();
+    await db.User.drop();
+  });
+
+  it("should register new user ", async () => {
+    const user = {
+      username: "name3",
+      password: "pass22",
+      age: 30,
+      sex: "female",
+      email: "email3@email.com",
+    };
+
+    try {
+      const response = await chai
+        .request(app)
+        .post(`${usersUrl}/register`)
+        .send(user);
+      const { success } = await JSON.parse(response.text);
+
+      expect(response.status).to.equal(201);
+      expect(success).to.be.true;
+    } catch (error) {
+      throw new Error("error");
+    }
   });
 
   it("should not register new user if the username exist", async () => {
@@ -45,7 +69,7 @@ describe("Users route", () => {
     try {
       const response = await chai
         .request(app)
-        .post("/api/v1/users/register")
+        .post(`${usersUrl}/register`)
         .send(user);
       const { error } = await JSON.parse(response.error.text);
       expect(response.status).to.equal(412);
@@ -76,13 +100,26 @@ describe("Users route", () => {
     }
   });
   it("should received error on fail", async () => {
+    const wrongUrl = "/api/v1/userss";
     try {
-      const response = await chai.request(app).get("/api/v1/userss");
-      const { users } = await response.body;
+      const response = await chai.request(app).get(wrongUrl);
 
       expect(response.status).to.equal(404);
       expect(response.body).to.be.a("object");
       response.body.should.have.property("success").eq(false);
+    } catch (error) {
+      throw new Error("error");
+    }
+  });
+
+  it("should get a single user record", async () => {
+    const id = 1;
+
+    try {
+      const response = await chai.request(app).get(`${usersUrl}/${id}`);
+
+      expect(response.status).to.equal(200);
+      expect(response.body).to.be.a("object");
     } catch (error) {
       throw new Error("error");
     }
