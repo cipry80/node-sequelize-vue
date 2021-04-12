@@ -7,7 +7,8 @@
     "start": "nodemon --watch app app/index.js",
     "test": "export NODE_ENV=test && mocha './app/tests/**/*.js' --recursive --watch",
     "lint": "eslint app",
-    "ci": "npm run lint"
+    "ci": "npm run lint",
+    "coverage": "nyc mocha './app/tests/**/*.js' --timeout=3000 --check-coverage --branches 90 --statements 90 --lines 90"
   },
   "keywords": [
     "node",
@@ -44,6 +45,8 @@
     "eslint-config-fortech": "^2.0.2",
     "eslint-plugin-import": "^2.22.1",
     "mocha": "^8.3.2",
+    "nyc": "^15.1.0",
+    "sinon": "^10.0.0",
     "uid": "^2.0.0"
   }
 }

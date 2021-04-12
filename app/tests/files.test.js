@@ -1,7 +1,7 @@
 const chai = require("chai");
 const fs = require("fs");
 const chaiHttp = require("chai-http");
-
+const sinon = require("sinon");
 const expect = chai.expect;
 const app = require("../index");
 const db = require("../models");
@@ -25,6 +25,7 @@ describe("Files route", () => {
     });
   });
   afterEach(async () => {
+    sinon.restore();
     await db.File.drop();
   });
 
@@ -50,6 +51,22 @@ describe("Files route", () => {
     }
   });
 
+  it("should throw error if file name is undefined", async () => {
+    try {
+      const response = await chai
+        .request(app)
+        .post(`${filesUrl}/upload`)
+        .field("Content-Type", "multipart/form-data");
+
+      const { message } = response.body;
+
+      expect(response.status).to.equal(400);
+      expect(message).to.be.eq(`Please upload a file!`);
+    } catch (error) {
+      throw new Error("error");
+    }
+  });
+
   it("should get all the files", async () => {
     try {
       const response = await chai.request(app).get(filesUrl);
@@ -70,16 +87,19 @@ describe("Files route", () => {
     }
   });
   it("should received error on fail", async () => {
-    const wrongUrl = "/api/v1/filess";
-    try {
-      const response = await chai.request(app).get(wrongUrl);
+    const mError = new Error("stub: Internal server error");
+    const query = sinon.stub(db.File, "findAll").rejects(mError);
 
-      expect(response.status).to.equal(404);
-      expect(response.body).to.be.a("object");
+    try {
+      const response = await chai.request(app).get("/api/v1/files");
+      sinon.assert.calledWith(query, { raw: true });
+      console.log(response.body, "response.status");
+      expect(response.status).to.equal(400);
       response.body.should.have.property("success").eq(false);
     } catch (error) {
-      throw new Error("error");
+      throw error;
     }
+    sinon.restore();
   });
 
   it("should get a single file record", async () => {

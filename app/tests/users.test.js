@@ -1,5 +1,5 @@
 const chai = require("chai");
-const should = chai.should();
+const sinon = require("sinon");
 const expect = chai.expect;
 const bcrypt = require("bcrypt");
 
@@ -122,17 +122,20 @@ describe("Users route", () => {
       throw new Error("error");
     }
   });
-  it("should received error on fail", async () => {
-    const wrongUrl = "/api/v1/userss";
-    try {
-      const response = await chai.request(app).get(wrongUrl);
 
+  it("should received error on fail", async () => {
+    const mError = new Error("stub: Internal server error");
+    const query = sinon.stub(db.User, "findAll").rejects(mError);
+
+    try {
+      const response = await chai.request(app).get(usersUrl);
+      sinon.assert.calledWith(query, { raw: true });
       expect(response.status).to.equal(404);
-      expect(response.body).to.be.a("object");
       response.body.should.have.property("success").eq(false);
     } catch (error) {
-      throw new Error("error");
+      throw error;
     }
+    sinon.restore();
   });
 
   it("should get a single user record", async () => {

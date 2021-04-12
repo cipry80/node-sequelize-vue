@@ -42,10 +42,10 @@ app.use((req, res) => {
   res.notFound();
 });
 
-app.use((err, req, res, next) => {
-  logger.error(err.stack);
-  next(err);
-});
+// app.use((err, req, res, next) => {
+//   logger.error(err.stack);
+//   next(err);
+// });
 
 // Don"t remove next !!!!
 app.use((err, req, res, next) => {
