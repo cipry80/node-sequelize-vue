@@ -1,11 +1,6 @@
 const { extractObject } = require("../utilities");
 const db = require("../models");
 
-const allowedTypes = (file) => {
-  const ext = [".txt", ".pdf", ".csv", ".xls"];
-  return ext.some((el) => file.endsWith(el));
-};
-
 const upload = async (req, res) => {
   try {
     if (req.file === undefined) {

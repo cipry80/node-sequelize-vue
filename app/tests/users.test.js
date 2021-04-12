@@ -164,7 +164,7 @@ describe("Users route", () => {
     }
   });
 
-  it("it should delete a user given an id", async () => {
+  it("it should delete a user after a specific id", async () => {
     const id = 1;
     try {
       const response = await chai.request(app).delete(`${usersUrl}/${id}`);
