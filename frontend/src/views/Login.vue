@@ -2,12 +2,7 @@
   <div class="login">
     <h1>Login</h1>
     <b-form @submit="onSubmit" v-if="show">
-      <b-form-group
-        id="input-group-1"
-        label="Username:"
-        label-for="input-1"
-        description="We'll never share your email with anyone else."
-      >
+      <b-form-group id="input-group-1" label="Username:" label-for="input-1">
         <b-form-input
           id="input-1"
           v-model="form.username"

@@ -11,24 +11,28 @@ const opts = {
   secretOrKey: config.PASSPORT_SECRET,
 };
 
-const strategy = new StrategyJwt(opts, async (jwtPayload, done) => {
-  console.log(jwtPayload);
-
-  await db.User.findOne({
-    where: { userId: jwtPayload?.id },
-  })
-    .then((user) => {
-      if (user) {
-        return done(null, user);
-      } else {
-        return done(null, false);
-      }
-    })
-    .catch((error) => {
-      return done(error, null);
-    });
+exports.jwt = new StrategyJwt(opts, async (jwtPayload, cb) => {
+  try {
+    const user = await User.findByPk(jwtPayload.id);
+    cb(null, user);
+  } catch (e) {
+    cb(e);
+  }
 });
 
-module.exports = (passport) => {
-  passport.use("custom-strategy", strategy);
-};
+// const strategyApp = new StrategyJwt(opts, async (jwtPayload, done) => {
+//   console.log(jwtPayload);
+//   try {
+//     const user = await db.User.findOne({
+//       where: { userId: jwtPayload?.id },
+//     });
+
+//     if (user) {
+//       return done(null, user);
+//     } else {
+//       return done(null, false);
+//     }
+//   } catch (error) {
+//     return done(error, null);
+//   }
+// });

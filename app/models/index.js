@@ -5,7 +5,7 @@ const path = require("path");
 const Sequelize = require("sequelize");
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || "development";
-const config = require(__dirname + "/../config/configDb.json")[env];
+const config = require(__dirname + "/../config/config.json")[env];
 const db = {};
 
 let sequelize;
@@ -53,8 +53,8 @@ db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
 // force: true will drop the table if it already exists
-// db.sequelize.sync({ force: true }).then(() => {
-//   console.log("Drop and Resync with { force: true }");
-// });
+db.sequelize.sync({ force: true }).then(() => {
+  console.log("Drop and Resync with { force: true }");
+});
 
 module.exports = db;

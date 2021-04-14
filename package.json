@@ -5,10 +5,12 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon --watch app app/index.js",
-    "test": "export NODE_ENV=test && mocha './app/tests/**/*.js' --recursive --watch",
+    "test": "NODE_ENV=test && mocha ./app/test/index.js --recursive --watch",
     "lint": "eslint app",
     "ci": "npm run lint",
-    "coverage": "nyc mocha './app/tests/**/*.js' --timeout=3000 --check-coverage --branches 90 --statements 90 --lines 90"
+    "coverage": "nyc mocha './app/test/**/*.js' --timeout=3000 --check-leaks --check-coverage --branches 90 --statements 90 --lines 90",
+    "migrate": "cd ./app && sequelize db:migrate",
+    "seeds": "cd ./app && sequelize db:seed:all"
   },
   "keywords": [
     "node",
@@ -48,5 +50,8 @@
     "nyc": "^15.1.0",
     "sinon": "^10.0.0",
     "uid": "^2.0.0"
+  },
+  "directories": {
+    "test": "./tests"
   }
 }

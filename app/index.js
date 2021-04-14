@@ -2,11 +2,10 @@ const express = require("express");
 const helmet = require("helmet");
 const passport = require("passport");
 const cors = require("cors");
-
+const strategies = require("./middlewares/passport");
 const logger = require("./utilities/logger");
 const config = require("./config");
 
-const homeRoutes = require("./routes/index");
 const userRoutes = require("./routes/users");
 const filesRoutes = require("./routes/files");
 const customResponses = require("./middlewares/customResponses");
@@ -30,17 +29,13 @@ app.use((req, res, next) => {
 app.use(helmet());
 
 app.use(passport.initialize());
-require("./middlewares/passport")(passport);
+passport.use("jwt", strategies.jwt);
 
 app.use(customResponses);
 
-app.use("/", homeRoutes);
+// app.use("/", homeRoutes);
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/files", filesRoutes);
-
-app.use((req, res) => {
-  res.notFound();
-});
 
 // app.use((err, req, res, next) => {
 //   logger.error(err.stack);
@@ -61,6 +56,11 @@ app.use((err, req, res, next) => {
       error: "server_error",
     });
   }
+});
+
+//  handle 404 page
+app.use((req, res) => {
+  res.notFound();
 });
 
 if (!module.parent) {
