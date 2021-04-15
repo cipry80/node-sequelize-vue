@@ -83,7 +83,6 @@ export default {
         this.errors.push(error);
       }
     },
-    goToRegister() {},
   },
 };
 </script>

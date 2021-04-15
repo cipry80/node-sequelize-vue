@@ -20,6 +20,7 @@ const getUser = async (req, res) => {
   try {
     const user = await db.User.findAll({
       where: { userId: req.params.id },
+      raw: true,
     });
 
     if (user.length === 0) {

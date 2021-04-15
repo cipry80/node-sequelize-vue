@@ -48,7 +48,7 @@ describe("Users route", async () => {
       throw new Error("error");
     }
   });
-  it("should not register new user if the username exist", async () => {
+  it("should not register new user if the username exists", async () => {
     const user = {
       username: "name",
       password: hashedPassword,
@@ -107,7 +107,7 @@ describe("Users route", async () => {
       throw new Error("error");
     }
   });
-  it("should received 404 error whit wrong url", async () => {
+  it("should receive 404 error with wrong url", async () => {
     const wrongUrl = "/api/v1/userss";
     try {
       const response = await chai.request(app).get(wrongUrl);
@@ -128,7 +128,7 @@ describe("Users route", async () => {
       throw new Error("error");
     }
   });
-  it("it should update a user given an id", async () => {
+  it("should update a user given an id", async () => {
     const id = 1;
     try {
       const response = await chai.request(app).put(`${usersUrl}/${id}`).send({

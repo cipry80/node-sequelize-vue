@@ -42,7 +42,6 @@ describe("Files route", () => {
       expect(message).to.be.eq(`Uploaded the file successfully: ${fileName}`);
       expect(files.length).to.be.eq(3);
     } catch (error) {
-      console.log(error, "errrr");
       throw new Error("error");
     }
   });
