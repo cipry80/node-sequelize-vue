@@ -1,21 +1,27 @@
 module.exports = (sequelize, DataTypes) => {
-  const File = sequelize.define("File", {
-    fileId: {
-      allowNull: false,
-      autoIncrement: true,
-      type: DataTypes.INTEGER,
-      primaryKey: true,
+  const File = sequelize.define(
+    "File",
+    {
+      fileId: {
+        allowNull: false,
+        autoIncrement: true,
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+      },
+      type: {
+        type: DataTypes.STRING,
+      },
+      name: {
+        type: DataTypes.STRING,
+      },
+      data: {
+        type: DataTypes.BLOB("long"),
+      },
     },
-    type: {
-      type: DataTypes.STRING,
-    },
-    name: {
-      type: DataTypes.STRING,
-    },
-    data: {
-      type: DataTypes.BLOB("long"),
-    },
-  });
+    {
+      timestamps: false,
+    }
+  );
 
   return File;
 };

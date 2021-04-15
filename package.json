@@ -5,12 +5,12 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon --watch app app/index.js",
+    "db:reset": "cd app && npx sequelize-cli db:drop && npx sequelize-cli db:create && npx sequelize-cli db:migrate && npx sequelize-cli db:seed:all",
     "test": "NODE_ENV=test && mocha ./app/test/index.js --recursive --watch",
     "lint": "eslint app",
     "ci": "npm run lint",
     "test:coverage": "nyc mocha './app/test/**/*.js' --timeout=3000 --check-leaks --check-coverage --branches 90 --statements 90 --lines 90",
-    "migrate": "cd ./app && sequelize db:migrate",
-    "seeds": "cd ./app && sequelize db:seed:all"
+    "migrate": "cd app && sequelize db:create && sequelize db:migrate && sequelize db:seed:all"
   },
   "keywords": [
     "node",

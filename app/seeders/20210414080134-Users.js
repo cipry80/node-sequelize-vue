@@ -19,8 +19,6 @@ module.exports = {
           age: 23,
           sex: "male",
           email: "email@email.com",
-          createdAt: new Date(),
-          updatedAt: new Date(),
         },
         {
           username: "name2",
@@ -28,8 +26,6 @@ module.exports = {
           age: 23,
           sex: "female",
           email: "email2@email.com",
-          createdAt: new Date(),
-          updatedAt: new Date(),
         },
       ],
       {}
@@ -37,6 +33,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkDelete("Users", null, {});
+    return await queryInterface.bulkDelete("Users", null, {});
   },
 };

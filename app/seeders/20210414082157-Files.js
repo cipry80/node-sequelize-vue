@@ -13,15 +13,11 @@ module.exports = {
           type: "",
           name: "test.pdf",
           data: file,
-          createdAt: new Date(),
-          updatedAt: new Date(),
         },
         {
           type: "",
           name: "test2.pdf",
           data: file,
-          createdAt: new Date(),
-          updatedAt: new Date(),
         },
       ],
       {}
@@ -29,6 +25,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkDelete("Files", null, {});
+    return await queryInterface.bulkDelete("Files", null, {});
   },
 };
