@@ -24,11 +24,13 @@ const getUser = async (req, res) => {
     });
 
     if (user.length === 0) {
-      return res.status(401).json({ messages: "No such user found" });
+      return res
+        .status(401)
+        .json({ success: false, message: "No such user found" });
     }
 
     const responseObj = {
-      succes: true,
+      success: true,
       ...extractObject(user[0], ["userId", "username", "email"]),
     };
     res.status(200).json(responseObj);
@@ -62,6 +64,7 @@ const register = async (req, res) => {
 
     return res.status(201).json({
       success: true,
+      message: "User created with success",
     });
   } catch (error) {
     res.status(400).json({ success: false, error: error.message });
@@ -70,7 +73,9 @@ const register = async (req, res) => {
 
 const login = async (req, res) => {
   if (!req.body.password) {
-    return res.status(400).send("password required");
+    return res
+      .status(400)
+      .json({ success: false, message: "password required" });
   }
 
   const user = await db.User.findAll({
@@ -78,7 +83,9 @@ const login = async (req, res) => {
   });
 
   if (user.length === 0) {
-    return res.status(404).json({ messages: "No such user found" });
+    return res
+      .status(404)
+      .json({ success: false, message: "No such user found" });
   }
 
   const { userId, username, password, email } = user[0];
@@ -126,11 +133,15 @@ const edit = async (req, res) => {
     });
 
     if (user.length === 0) {
-      return res.status(401).json({ messages: "No such user found" });
+      return res
+        .status(401)
+        .json({ success: false, message: "No such user found" });
     }
 
     await db.User.update({ email }, { where: { userId: id } });
-    res.status(200).json({ message: "User updated with succes", user });
+    res
+      .status(200)
+      .json({ success: true, message: "User updated with succes", user });
   } catch (error) {
     res.status(400).json({ success: false, error });
   }
@@ -143,10 +154,12 @@ const deleteUser = async (req, res) => {
     });
 
     if (user.length === 0) {
-      return res.status(401).json({ messages: "No such user found" });
+      return res
+        .status(401)
+        .json({ success: false, message: "No such user found" });
     }
     await db.User.destroy({ where: { userId: req.params.id } });
-    res.status(200).json({ success: "The user was deleted" });
+    res.status(200).json({ success: true, message: "The user was deleted" });
   } catch (error) {
     res.status(400).json({ success: false, error });
   }

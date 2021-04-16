@@ -20,9 +20,9 @@ describe("Users route", () => {
         .request(app)
         .post(`${usersUrl}/register`)
         .send(user);
-      const { success } = await response.body;
+
       expect(response.status).to.equal(201);
-      expect(success).to.be.true;
+      expect(response.body).to.be.true;
     } catch (error) {
       throw new Error("error");
     }
@@ -58,14 +58,80 @@ describe("Users route", () => {
         .request(app)
         .post(`${usersUrl}/login`)
         .send(body);
-      const { success } = await response.body;
       expect(response.status).to.equal(200);
-      expect(success).to.be.true;
+      expect(response.body).to.be.true;
       expect(response.body).to.have.property("token");
     } catch (error) {
       throw new Error("error");
     }
   });
+
+  it("should not logged in if password is missing", async () => {
+    const body = {
+      username: "name3",
+    };
+
+    try {
+      const response = await chai
+        .request(app)
+        .post(`${usersUrl}/login`)
+        .send(body);
+
+      expect(response.status).to.equal(400);
+      expect(response.body).to.be.a("object");
+      expect(response.body).to.have.property("success").eq(false);
+      expect(response.body).to.have.property("message").eq("password required");
+    } catch (error) {
+      console.log(error, "errrrrr");
+      throw new Error("error");
+    }
+  });
+
+  it("should not logged in if user not exist", async () => {
+    const body = {
+      username: "name4",
+      password: "pass123",
+    };
+
+    try {
+      const response = await chai
+        .request(app)
+        .post(`${usersUrl}/login`)
+        .send(body);
+
+      expect(response.status).to.equal(404);
+      expect(response.body).to.be.a("object");
+      expect(response.body).to.have.property("success").eq(false);
+      expect(response.body)
+        .to.have.property("message")
+        .eq("No such user found");
+    } catch (error) {
+      throw new Error("error");
+    }
+  });
+  it("should not logged in if password in wrong", async () => {
+    const body = {
+      username: "name3",
+      password: "bad",
+    };
+
+    try {
+      const response = await chai
+        .request(app)
+        .post(`${usersUrl}/login`)
+        .send(body);
+
+      expect(response.status).to.equal(401);
+      expect(response.body).to.be.a("object");
+      expect(response.body).to.have.property("success").eq(false);
+      expect(response.body)
+        .to.have.property("message")
+        .eq("Authentication failed. Wrong password.");
+    } catch (error) {
+      throw new Error("error");
+    }
+  });
+
   it("should get all the users", async () => {
     try {
       const response = await chai.request(app).get(usersUrl);
@@ -116,6 +182,7 @@ describe("Users route", () => {
       });
       expect(response.status).to.equal(200);
       expect(response.body).to.be.a("object");
+
       const responseUser = await chai.request(app).get(`${usersUrl}/${id}`);
       expect(responseUser.body).to.have.property("email").eql("john@email.com");
     } catch (error) {
@@ -131,6 +198,21 @@ describe("Users route", () => {
 
       const responseUser = await chai.request(app).get(`${usersUrl}/${id}`);
       expect(responseUser.status).to.equal(401);
+    } catch (error) {
+      throw new Error("error");
+    }
+  });
+
+  it("should get receive 401 if no user record", async () => {
+    const id = 5;
+    try {
+      const response = await chai.request(app).get(`${usersUrl}/${id}`);
+      expect(response.status).to.equal(401);
+      expect(response.body).to.be.a("object");
+      expect(response.body).to.have.property("success").eq(false);
+      expect(response.body)
+        .to.have.property("message")
+        .eq("No such user found");
     } catch (error) {
       throw new Error("error");
     }

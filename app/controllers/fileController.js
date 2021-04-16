@@ -4,7 +4,9 @@ const db = require("../models");
 const upload = async (req, res) => {
   try {
     if (req.file === undefined) {
-      return res.status(400).json({ message: "Please upload a file!" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Please upload a file!" });
     }
 
     await db.File.create({
@@ -41,7 +43,9 @@ const getFile = async (req, res) => {
     });
 
     if (file.length === 0) {
-      return res.status(401).json({ messages: "No such file found" });
+      return res
+        .status(401)
+        .json({ success: false, message: "No such file found" });
     }
 
     const responseObj = {

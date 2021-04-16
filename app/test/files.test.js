@@ -29,6 +29,22 @@ describe("Files route", () => {
     }
   });
 
+  it("should upload a new file", async () => {
+    try {
+      const response = await chai
+        .request(app)
+        .post(`${filesUrl}/upload`)
+        .field("Content-Type", "multipart/form-data")
+        .field("name", "testFile");
+      expect(response.status).to.equal(400);
+      expect(response.body.message).to.be.eq("Please upload a file!");
+    } catch (error) {
+      console.log(error);
+
+      throw new Error("error");
+    }
+  });
+
   it("should throw error if file name is undefined", async () => {
     try {
       const response = await chai
@@ -36,10 +52,13 @@ describe("Files route", () => {
         .post(`${filesUrl}/upload`)
         .field("Content-Type", "multipart/form-data");
 
-      const { message } = response.body;
-
       expect(response.status).to.equal(400);
-      expect(message).to.be.eq(`Please upload a file!`);
+
+      expect(response.body).to.be.a("object");
+      expect(response.body).to.have.property("success").eq(false);
+      expect(response.body)
+        .to.have.property("message")
+        .eq("Please upload a file!");
     } catch (error) {
       throw new Error("error");
     }
@@ -87,6 +106,22 @@ describe("Files route", () => {
 
       const responseUser = await chai.request(app).get(`${filesUrl}/${id}`);
       expect(responseUser.status).to.equal(401);
+    } catch (error) {
+      throw new Error("error");
+    }
+  });
+
+  it.only("should get receive 401 if no file record", async () => {
+    const id = 5;
+    try {
+      const response = await chai.request(app).get(`${filesUrl}/${id}`);
+
+      expect(response.status).to.equal(401);
+      expect(response.body).to.be.a("object");
+      expect(response.body).to.have.property("success").eq(false);
+      expect(response.body)
+        .to.have.property("message")
+        .eq("No such file found");
     } catch (error) {
       throw new Error("error");
     }
