@@ -29,7 +29,7 @@ module.exports = {
         allowNull: false,
         validate: { notEmpty: true, min: 18 },
       },
-      sex: { type: Sequelize.ENUM, values: ["male", "female"] },
+      gender: { type: Sequelize.ENUM, values: ["male", "female"] },
     });
   },
 

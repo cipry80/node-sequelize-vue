@@ -1,7 +1,7 @@
 <template>
   <div class="register">
     <h1>Register Page</h1>
-    <b-form @submit.prevent="onSubmit">
+    <b-form @submit.prevent="onSubmit" novalidate="novalidate">
       <b-form-group id="input-group-1" label="Username:" label-for="input-1">
         <b-form-input
           id="input-1"

@@ -24,14 +24,26 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true,
-        validate: { notEmpty: true },
+        validate: {
+          notEmpty: true,
+          isEmail: { msg: "Email has not a correct format, please try again" },
+        },
       },
       age: {
         type: DataTypes.INTEGER,
         allowNull: false,
         validate: { notEmpty: true, min: 18 },
       },
-      sex: { type: DataTypes.ENUM, values: ["male", "female"] },
+      gender: {
+        type: DataTypes.ENUM,
+        values: ["male", "female"],
+        validate: {
+          isIn: {
+            args: ["male", "female"],
+            msg: "Please choose between male or female",
+          },
+        },
+      },
     },
     {
       timestamps: false,

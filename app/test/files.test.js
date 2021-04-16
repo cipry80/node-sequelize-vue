@@ -111,7 +111,7 @@ describe("Files route", () => {
     }
   });
 
-  it.only("should get receive 401 if no file record", async () => {
+  it("should get receive 401 if no file record", async () => {
     const id = 5;
     try {
       const response = await chai.request(app).get(`${filesUrl}/${id}`);

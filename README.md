@@ -63,7 +63,7 @@ yarn db:reset-test
 
 Migration will create table users and files and seed some default users and files
 
-- **users** - this is users table with some required fields like (username, email, age, sex)
+- **users** - this is users table with some required fields like (username, email, age, gender)
 - **files** - this is files table with some required fields like (type, name, data)
 
 ## Project Setup

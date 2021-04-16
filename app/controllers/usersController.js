@@ -41,30 +41,39 @@ const getUser = async (req, res) => {
 
 const register = async (req, res) => {
   try {
-    const { username, password, age, sex, email } = req.body;
-
+    const { username, password, email, age, gender } = req.body;
+    console.log(req.body, "body");
     const user = await db.User.findAll({
       where: { username },
+    });
+
+    const emailResponse = await db.User.findAll({
+      where: { email },
     });
 
     if (user.length > 0) {
       return res.preconditionFailed("existing_user");
     }
 
+    if (emailResponse.length > 0) {
+      return res.preconditionFailed("existing_email");
+    }
+
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(password, salt);
-
-    await db.User.create({
+    console.log(gender);
+    const newUser = await db.User.create({
       username,
       password: hashedPassword,
       age,
-      sex,
+      gender,
       email,
     });
 
     return res.status(201).json({
       success: true,
       message: "User created with success",
+      user: newUser,
     });
   } catch (error) {
     res.status(400).json({ success: false, error: error.message });

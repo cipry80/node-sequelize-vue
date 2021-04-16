@@ -12,7 +12,7 @@ describe("Users route", () => {
       username: "name3",
       password: "hashedPassword",
       age: 30,
-      sex: "female",
+      gender: "female",
       email: "email3@email.com",
     };
     try {
@@ -32,7 +32,7 @@ describe("Users route", () => {
       username: "name",
       password: "hashedPassword",
       age: 23,
-      sex: "male",
+      gender: "male",
       email: "email@email.com",
     };
     try {
@@ -147,7 +147,7 @@ describe("Users route", () => {
       expect(user).to.have.property("username");
       expect(user).to.have.property("email");
       expect(user).to.have.property("age");
-      expect(user).to.have.property("sex");
+      expect(user).to.have.property("gender");
       expect(response.body).to.have.property("success").eq(true);
     } catch (error) {
       throw new Error("error");
