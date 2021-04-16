@@ -49,14 +49,14 @@ Other inportant parameters/keys in **app/config/environments** file
 
 ```
 
-### Migration and Seeders run
+### Migration, Seeders, Cleanup run
 
-After creating database and updating env file run below commands
+After creating database and updating env file run below commands depending the environment
 
 ```
 
-yarn migrate
-yarn seeds
+yarn db:reset
+yarn db:reset-test
 
 
 ```
