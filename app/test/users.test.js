@@ -1,37 +1,16 @@
 const chai = require("chai");
-const should = chai.should();
 const expect = chai.expect;
-const bcrypt = require("bcrypt");
 const chaiHttp = require("chai-http");
 const app = require("../index");
-const db = require("../models");
 chai.use(chaiHttp);
-const usersUrl = "/api/v1/users";
-describe("Users route", async () => {
-  const salt = await bcrypt.genSalt();
-  const hashedPassword = await bcrypt.hash("pass123", salt);
-  beforeEach(async () => {
-    await db.User.create({
-      username: "name",
-      password: hashedPassword,
-      age: 23,
-      sex: "male",
-      email: "email@email.com",
-    });
 
-    await db.User.create({
-      username: "name2",
-      password: hashedPassword,
-      age: 28,
-      sex: "female",
-      email: "email@email2.com",
-    });
-  });
-  afterEach(async () => {});
+const usersUrl = "/api/v1/users";
+
+describe("Users route", () => {
   it("should register new user ", async () => {
     const user = {
       username: "name3",
-      password: hashedPassword,
+      password: "hashedPassword",
       age: 30,
       sex: "female",
       email: "email3@email.com",
@@ -41,7 +20,7 @@ describe("Users route", async () => {
         .request(app)
         .post(`${usersUrl}/register`)
         .send(user);
-      const { success } = await JSON.parse(response.text);
+      const { success } = await response.body;
       expect(response.status).to.equal(201);
       expect(success).to.be.true;
     } catch (error) {
@@ -51,7 +30,7 @@ describe("Users route", async () => {
   it("should not register new user if the username exists", async () => {
     const user = {
       username: "name",
-      password: hashedPassword,
+      password: "hashedPassword",
       age: 23,
       sex: "male",
       email: "email@email.com",
@@ -70,9 +49,10 @@ describe("Users route", async () => {
   });
   it("should login with success ", async () => {
     const body = {
-      username: "name",
-      password: hashedPassword,
+      username: "name3",
+      password: "hashedPassword",
     };
+
     try {
       const response = await chai
         .request(app)
@@ -86,23 +66,23 @@ describe("Users route", async () => {
       throw new Error("error");
     }
   });
-  it("should get all the users on success", async () => {
+  it("should get all the users", async () => {
     try {
       const response = await chai.request(app).get(usersUrl);
       const { users } = await response.body;
-
       expect(response.status).to.equal(200);
       expect(response.body).to.be.a("object");
       expect(users).be.a("array");
-      expect(users).to.have.length(2);
+      expect(users).to.have.length(3);
 
-      const user = users[0];
-      user.should.have.property("userId");
-      user.should.have.property("username");
-      user.should.have.property("email");
-      user.should.have.property("age");
-      user.should.have.property("sex");
-      response.body.should.have.property("success").eq(true);
+      const user = await users[0];
+
+      expect(user).to.have.property("userId");
+      expect(user).to.have.property("username");
+      expect(user).to.have.property("email");
+      expect(user).to.have.property("age");
+      expect(user).to.have.property("sex");
+      expect(response.body).to.have.property("success").eq(true);
     } catch (error) {
       throw new Error("error");
     }
@@ -113,13 +93,13 @@ describe("Users route", async () => {
       const response = await chai.request(app).get(wrongUrl);
       expect(response.status).to.equal(404);
       expect(response.body).to.be.a("object");
-      response.body.should.have.property("success").eq(false);
+      expect(response.body).to.have.property("success").eq(false);
     } catch (error) {
       throw new Error("error");
     }
   });
   it("should get a single user record", async () => {
-    const id = 1;
+    const id = 3;
     try {
       const response = await chai.request(app).get(`${usersUrl}/${id}`);
       expect(response.status).to.equal(200);

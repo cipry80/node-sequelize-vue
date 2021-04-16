@@ -3,28 +3,12 @@ const fs = require("fs");
 const chaiHttp = require("chai-http");
 const expect = chai.expect;
 const app = require("../index");
-const db = require("../models");
 
 chai.use(chaiHttp);
 
 const filesUrl = "/api/v1/files";
 
 describe("Files route", () => {
-  beforeEach(async () => {
-    await db.File.create({
-      type: "",
-      name: "test.pdf",
-      data: "",
-    });
-
-    await db.File.create({
-      type: "",
-      name: "test.txt",
-      data: "",
-    });
-  });
-
-  afterEach(async () => {});
   it("should upload a new file", async () => {
     const fileName = "test.txt";
 
@@ -33,9 +17,8 @@ describe("Files route", () => {
         .request(app)
         .post(`${filesUrl}/upload`)
         .field("Content-Type", "multipart/form-data")
-        .field("name", "testFilee")
+        .field("name", "testFile")
         .attach("file", fs.readFileSync(`${__dirname}/${fileName}`), fileName);
-
       const { message, files } = response.body;
 
       expect(response.status).to.equal(200);
@@ -69,14 +52,14 @@ describe("Files route", () => {
       expect(response.status).to.equal(200);
       expect(response.body).to.be.a("object");
       expect(files).be.a("array");
-      expect(files).to.have.length(2);
+      expect(files).to.have.length(3);
 
       const file = files[0];
-      file.should.have.property("fileId");
-      file.should.have.property("type");
-      file.should.have.property("name");
-      file.should.have.property("data");
-      response.body.should.have.property("success").eq(true);
+      expect(file).to.have.property("fileId");
+      expect(file).to.have.property("type");
+      expect(file).to.have.property("name");
+      expect(file).to.have.property("data");
+      expect(response.body).to.have.property("success").eq(true);
     } catch (error) {
       throw new Error("error");
     }

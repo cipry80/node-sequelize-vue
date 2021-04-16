@@ -2,9 +2,6 @@
 
 const bcrypt = require("bcrypt");
 
-const config = require("../config");
-const SECRET = config.JWT_SECRET;
-
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     const salt = await bcrypt.genSalt();
