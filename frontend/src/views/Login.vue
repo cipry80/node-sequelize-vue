@@ -2,6 +2,9 @@
   <div class="login">
     <h1>Login</h1>
     <b-form @submit="onSubmit" v-if="show">
+      <p v-if="error">
+        {{ error }}
+      </p>
       <b-form-group id="input-group-1" label="Username:" label-for="input-1">
         <b-form-input
           id="input-1"
@@ -50,7 +53,7 @@ export default {
         username: "",
         password: "",
       },
-      errors: [],
+      error: null,
       show: true,
     };
   },
@@ -77,10 +80,10 @@ export default {
           localStorage.removeItem("user");
           this.errors.push(data.message);
         }
-      } catch (error) {
+      } catch (err) {
         localStorage.removeItem("token");
         localStorage.removeItem("user");
-        this.errors.push(error);
+        this.error = err.response.data.message;
       }
     },
   },
