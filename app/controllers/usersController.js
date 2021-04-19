@@ -42,7 +42,7 @@ const getUser = async (req, res) => {
 const register = async (req, res) => {
   try {
     const { username, password, email, age, gender } = req.body;
-    console.log(req.body, "body");
+
     const user = await db.User.findAll({
       where: { username },
     });
@@ -50,6 +50,10 @@ const register = async (req, res) => {
     const emailResponse = await db.User.findAll({
       where: { email },
     });
+
+    if (!username || !password || !email || !age || !gender) {
+      return res.preconditionFailed("cannot_be_empty");
+    }
 
     if (user.length > 0) {
       return res.preconditionFailed("existing_user");
@@ -61,7 +65,7 @@ const register = async (req, res) => {
 
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(password, salt);
-    console.log(gender);
+
     const newUser = await db.User.create({
       username,
       password: hashedPassword,

@@ -39,8 +39,6 @@ describe("Files route", () => {
       expect(response.status).to.equal(400);
       expect(response.body.message).to.be.eq("Please upload a file!");
     } catch (error) {
-      console.log(error);
-
       throw new Error("error");
     }
   });

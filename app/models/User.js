@@ -12,35 +12,57 @@ module.exports = (sequelize, DataTypes) => {
       username: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true,
-        validate: { notEmpty: true },
+        validate: {
+          notEmpty: {
+            args: true,
+            msg: "Field cannot be empty",
+          },
+        },
+        unique: { args: true, msg: "Username must be unique" },
       },
       password: {
         type: DataTypes.STRING,
         allowNull: false,
-        validate: { notEmpty: true },
+        validate: {
+          notEmpty: {
+            args: true,
+            msg: "Field cannot be empty",
+          },
+        },
       },
       email: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true,
         validate: {
-          notEmpty: true,
+          notEmpty: {
+            args: true,
+            msg: "Field cannot be empty",
+          },
           isEmail: { msg: "Email has not a correct format, please try again" },
         },
+        unique: true,
       },
       age: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        validate: { notEmpty: true, min: 18 },
+        validate: {
+          notEmpty: {
+            args: true,
+            msg: "Field cannot be empty",
+          },
+          min: 18,
+        },
       },
       gender: {
-        type: DataTypes.ENUM,
-        values: ["male", "female"],
+        type: DataTypes.ENUM("male", "female"),
         validate: {
           isIn: {
-            args: ["male", "female"],
+            args: [["male", "female"]],
             msg: "Please choose between male or female",
+          },
+          notEmpty: {
+            args: true,
+            msg: "Field cannot be empty",
           },
         },
       },
